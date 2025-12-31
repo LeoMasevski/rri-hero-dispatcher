@@ -1,0 +1,76 @@
+{
+  "crimeLocations": [
+    {
+      "id": "bank_central_city_01",
+      "type": "bank",
+      "name": "Central City Bank",
+      "description": "A high-profile financial institution and frequent target for major crimes.",
+      "x": 6176,
+      "y": 3321,
+      "crimeTypes": ["robbery", "hostage", "vault_breach"]
+    },
+    {
+      "id": "jewelry_starlight_gems_01",
+      "type": "jewelry_store",
+      "name": "Starlight Gems",
+      "description": "A luxury jewelry store known for rare and valuable items.",
+      "x": 5411,
+      "y": 1706,
+      "crimeTypes": ["robbery", "smash_and_grab"]
+    },
+    {
+      "id": "school_central_city_high_01",
+      "type": "school",
+      "name": "Central City High School",
+      "description": "A large public high school with many students and staff present during the day.",
+      "x": 8476,
+      "y": 1000,
+      "crimeTypes": ["armed_intruder", "hostage", "kidnapping"]
+    },
+    {
+      "id": "park_cinnamon_street_01",
+      "type": "park",
+      "name": "Cinnamon Street Park",
+      "description": "A small neighborhood park with low visibility at night.",
+      "x": 5092,
+      "y": 816,
+      "crimeTypes": ["drug_deal", "vandalism", "mugging", "assault"]
+    },
+    {
+      "id": "business_cc_offices_01",
+      "type": "business_center",
+      "name": "CC Offices",
+      "description": "A modern business center housing multiple corporate offices.",
+      "x": 4250,
+      "y": 3615,
+      "crimeTypes": ["corporate_espionage", "blackmail", "hostage"]
+    },
+    {
+      "id": "park_butcher_street_01",
+      "type": "park",
+      "name": "Butcher Street Park",
+      "description": "A poorly lit urban park with a history of criminal activity.",
+      "x": 7653,
+      "y": 3089,
+      "crimeTypes": ["drug_deal", "vandalism", "mugging", "assault"]
+    },
+    {
+      "id": "data_center_nexuscore_01",
+      "type": "data_center",
+      "name": "NexusCore Data Center",
+      "description": "A highly secured data center managing critical digital infrastructure.",
+      "x": 3322,
+      "y": 899,
+      "crimeTypes": ["blackmail", "cyber_attack", "data_sabotage"]
+    },
+    {
+      "id": "store_8_12_convenience_01",
+      "type": "convenience_store",
+      "name": "8–12 Convenience Store",
+      "description": "A small convenience store open late hours and prone to minor crimes.",
+      "x": 6814,
+      "y": 2251,
+      "crimeTypes": ["shoplifting", "robbery", "assault"]
+    }
+  ]
+}

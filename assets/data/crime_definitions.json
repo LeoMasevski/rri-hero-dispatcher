@@ -1,0 +1,124 @@
+{
+  "crimeDefinitions": [
+    {
+      "id": "robbery",
+      "name": "Robbery",
+      "description": "Thieves are attempting to steal valuables using force or intimidation.",
+      "category": "violent",
+      "duration": 25,
+      "requiredHeroAttribute": "strength"
+    },
+    {
+      "id": "hostage",
+      "name": "Hostage Situation",
+      "description": "Criminals have taken hostages and negotiations or force are required.",
+      "category": "violent",
+      "duration": 35,
+      "requiredHeroAttribute": "intelligence"
+    },
+    {
+      "id": "vault_breach",
+      "name": "Vault Breach",
+      "description": "A high-security vault is being broken into, requiring both skill and strength.",
+      "category": "high_risk",
+      "duration": 45,
+      "requiredHeroAttribute": "strength"
+    },
+    {
+      "id": "smash_and_grab",
+      "name": "Smash and Grab",
+      "description": "Quick theft involving breaking windows and grabbing valuables.",
+      "category": "violent",
+      "duration": 15,
+      "requiredHeroAttribute": "agility"
+    },
+    {
+      "id": "armed_intruder",
+      "name": "Armed Intruder",
+      "description": "An intruder is armed and causing chaos; quick response is needed.",
+      "category": "violent",
+      "duration": 25,
+      "requiredHeroAttribute": "strength"
+    },
+    {
+      "id": "kidnapping",
+      "name": "Kidnapping",
+      "description": "A person has been taken against their will and must be rescued.",
+      "category": "high_risk",
+      "duration": 45,
+      "requiredHeroAttribute": "intelligence"
+    },
+    {
+      "id": "drug_deal",
+      "name": "Drug Deal",
+      "description": "Illegal substances are being exchanged.",
+      "category": "minor",
+      "duration": 12,
+      "requiredHeroAttribute": "agility"
+    },
+    {
+      "id": "vandalism",
+      "name": "Vandalism",
+      "description": "Property damage or graffiti is taking place.",
+      "category": "minor",
+      "duration": 12,
+      "requiredHeroAttribute": "agility"
+    },
+    {
+      "id": "mugging",
+      "name": "Mugging",
+      "description": "A person is being attacked for their belongings.",
+      "category": "violent",
+      "duration": 15,
+      "requiredHeroAttribute": "strength"
+    },
+    {
+      "id": "assault",
+      "name": "Assault",
+      "description": "Physical attack occurring in public.",
+      "category": "violent",
+      "duration": 15,
+      "requiredHeroAttribute": "strength"
+    },
+    {
+      "id": "corporate_espionage",
+      "name": "Corporate Espionage",
+      "description": "Sensitive corporate data is being stolen or sabotaged.",
+      "category": "cyber",
+      "duration": 35,
+      "requiredHeroAttribute": "intelligence"
+    },
+    {
+      "id": "blackmail",
+      "name": "Blackmail",
+      "description": "Criminals are threatening to expose information unless demands are met.",
+      "category": "cyber",
+      "duration": 25,
+      "requiredHeroAttribute": "intelligence"
+    },
+    {
+      "id": "cyber_attack",
+      "name": "Cyber Attack",
+      "description": "A digital intrusion is targeting critical infrastructure or data.",
+      "category": "cyber",
+      "duration": 35,
+      "requiredHeroAttribute": "intelligence"
+    },
+    {
+      "id": "data_sabotage",
+      "name": "Data Sabotage",
+      "description": "Important data is being deleted or corrupted.",
+      "category": "cyber",
+      "duration": 40,
+      "requiredHeroAttribute": "intelligence"
+    },
+    {
+      "id": "shoplifting",
+      "name": "Shoplifting",
+      "description": "Minor theft; quick action may prevent loss.",
+      "category": "minor",
+      "duration": 10,
+      "requiredHeroAttribute": "agility"
+    }
+  ]
+}
