@@ -2,13 +2,25 @@ package si.um.feri.herodispatcher.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.HashMap;
@@ -16,13 +28,16 @@ import java.util.Map;
 
 import si.um.feri.herodispatcher.HeroDispatcherGame;
 import si.um.feri.herodispatcher.data.GameDataLoader;
+import si.um.feri.herodispatcher.data.dto.HeroData;
 import si.um.feri.herodispatcher.managers.CrimeSpawnManager;
 import si.um.feri.herodispatcher.world.dynamic_objects.Crime;
+import si.um.feri.herodispatcher.world.dynamic_objects.Hero;
 import si.um.feri.herodispatcher.world.static_objects.CrimeDefinition;
 import si.um.feri.herodispatcher.world.static_objects.CrimeLocation;
 
 public class MainScreen implements Screen {
 
+    private HeroDispatcherGame game;
     private OrthographicCamera camera;
     private Viewport viewport;
     private SpriteBatch spriteBatch;
@@ -33,7 +48,14 @@ public class MainScreen implements Screen {
 
     private ShapeRenderer shapeRenderer;
 
+    // Hero selection UI
+    private Stage uiStage;
+    private HeroSelectionPanel heroSelectionPanel;
+    private Skin buttonSkin;
+
     public MainScreen(HeroDispatcherGame heroDispatcherGame) {
+        this.game = heroDispatcherGame;
+
         // TODO: use asset manager classes for handling assets
         mapTexture = new Texture(Gdx.files.internal("images/raw/central_city_map.png"));
 
@@ -61,6 +83,68 @@ public class MainScreen implements Screen {
         crimeSpawnManager = new CrimeSpawnManager(definitionsMap, locationsArray);
 
         shapeRenderer = new ShapeRenderer();
+
+        // Initialize hero selection UI
+        uiStage = new Stage(new ScreenViewport());
+        heroSelectionPanel = new HeroSelectionPanel(uiStage, game.assets) {
+            @Override
+            protected void onHeroSelected(Hero hero) {
+                Gdx.app.log("MainScreen", "Hero selected: " + hero.getName());
+            }
+        };
+
+        createButtonSkin();
+        createHeroButtons();
+    }
+
+    private void createButtonSkin() {
+        buttonSkin = new Skin();
+
+        BitmapFont font = new BitmapFont();
+        font.getData().setScale(1.2f);
+        buttonSkin.add("default", font);
+
+        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
+        buttonStyle.font = font;
+        buttonStyle.fontColor = Color.WHITE;
+        buttonStyle.overFontColor = Color.WHITE;
+        buttonStyle.downFontColor = Color.WHITE;
+
+        Color btnColor = new Color(0.25f, 0.35f, 0.65f, 0.9f);
+        buttonStyle.up = createButtonDrawable(btnColor);
+        buttonStyle.over = createButtonDrawable(new Color(0.3f, 0.45f, 0.75f, 0.9f));
+        buttonStyle.down = createButtonDrawable(new Color(0.2f, 0.3f, 0.6f, 0.9f));
+
+        buttonSkin.add("default", buttonStyle);
+    }
+
+    private TextureRegionDrawable createButtonDrawable(Color color) {
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(color);
+        pixmap.fill();
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return new TextureRegionDrawable(new TextureRegion(texture));
+    }
+
+    private void createHeroButtons() {
+        Table buttonTable = new Table();
+        buttonTable.setFillParent(true);
+        buttonTable.top().right();
+        buttonTable.pad(20);
+
+        // Single button to open hero selection
+        TextButton heroesButton = new TextButton("HEROES", buttonSkin);
+        heroesButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                heroSelectionPanel.show();
+            }
+        });
+
+        buttonTable.add(heroesButton).width(150).height(50).pad(5).row();
+
+        uiStage.addActor(buttonTable);
     }
 
 
@@ -72,6 +156,8 @@ public class MainScreen implements Screen {
             0
         );
         camera.update();
+
+        Gdx.input.setInputProcessor(uiStage);
     }
 
     @Override
@@ -108,11 +194,16 @@ public class MainScreen implements Screen {
 
         shapeRenderer.end();
 
+        // Draw hero selection UI
+        uiStage.act(delta);
+        uiStage.draw();
+
     }
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
+        uiStage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -127,12 +218,16 @@ public class MainScreen implements Screen {
 
     @Override
     public void hide() {
-
+        Gdx.input.setInputProcessor(null);
     }
 
     @Override
     public void dispose() {
         spriteBatch.dispose();
         mapTexture.dispose();
+        shapeRenderer.dispose();
+        uiStage.dispose();
+        heroSelectionPanel.dispose();
+        buttonSkin.dispose();
     }
 }
