@@ -1,6 +1,7 @@
 package si.um.feri.herodispatcher.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -28,27 +30,39 @@ import java.util.Map;
 
 import si.um.feri.herodispatcher.HeroDispatcherGame;
 import si.um.feri.herodispatcher.data.GameDataLoader;
-import si.um.feri.herodispatcher.data.dto.HeroData;
 import si.um.feri.herodispatcher.managers.CrimeSpawnManager;
+import si.um.feri.herodispatcher.managers.PathfindingManager;
 import si.um.feri.herodispatcher.world.dynamic_objects.Crime;
 import si.um.feri.herodispatcher.world.dynamic_objects.Hero;
 import si.um.feri.herodispatcher.world.static_objects.CrimeDefinition;
 import si.um.feri.herodispatcher.world.static_objects.CrimeLocation;
+import si.um.feri.herodispatcher.world.static_objects.PathGraph;
+import si.um.feri.herodispatcher.world.static_objects.PathNode;
 
 public class MainScreen implements Screen {
 
-    private HeroDispatcherGame game;
+    // ---------- Constants ----------
+    private static final float CRIME_RADIUS = 50f;
+    private static final float HERO_RADIUS = 70f;
+
+    // ---------- Core ----------
+    private final HeroDispatcherGame game;
+
     private OrthographicCamera camera;
     private Viewport viewport;
     private SpriteBatch spriteBatch;
-
-    private Texture mapTexture; // temporary explicit declaration and initialization
-
-    private CrimeSpawnManager crimeSpawnManager;
-
     private ShapeRenderer shapeRenderer;
 
-    // Hero selection UI
+    private Texture mapTexture;
+
+    // ---------- Systems ----------
+    private CrimeSpawnManager crimeSpawnManager;
+    private PathfindingManager pathfindingManager;
+
+    // ---------- World ----------
+    private Hero hero;
+
+    // ---------- UI ----------
     private Stage uiStage;
     private HeroSelectionPanel heroSelectionPanel;
     private Skin buttonSkin;
@@ -56,46 +70,87 @@ public class MainScreen implements Screen {
     public MainScreen(HeroDispatcherGame heroDispatcherGame) {
         this.game = heroDispatcherGame;
 
-        // TODO: use asset manager classes for handling assets
+        initRendering();
+        initWorldAndSystems();
+        initUI();
+    }
+
+    // =========================================================
+    // Init
+    // =========================================================
+
+    private void initRendering() {
         mapTexture = new Texture(Gdx.files.internal("images/raw/central_city_map.png"));
 
         camera = new OrthographicCamera();
-
-        // game world units are the same as the dimensions of the map in pixels
         viewport = new FitViewport(mapTexture.getWidth(), mapTexture.getHeight(), camera);
 
         spriteBatch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
+    }
 
+    private void initWorldAndSystems() {
         GameDataLoader loader = new GameDataLoader();
 
-
-        // TODO: maybe move conversion from MainScreen constructor
+        // Crimes
         Array<CrimeDefinition> definitionsArray = loader.loadCrimeDefinitions();
         Array<CrimeLocation> locationsArray = loader.loadCrimeLocations();
+        crimeSpawnManager = new CrimeSpawnManager(toCrimeDefinitionMap(definitionsArray), locationsArray);
 
-        // Convert array into a map for fast lookup
-        Map<String, CrimeDefinition> definitionsMap = new HashMap<>();
-        for (CrimeDefinition def : definitionsArray) {
-            definitionsMap.put(def.getId(), def);
-        }
+        // Pathfinding
+        Array<PathNode> pathNodes = loader.loadPathGraph();
+        PathGraph pathGraph = new PathGraph(toPathNodeMap(pathNodes));
+        pathfindingManager = new PathfindingManager(pathGraph);
 
-        // Pass map and locations array to CrimeSpawnManager
-        crimeSpawnManager = new CrimeSpawnManager(definitionsMap, locationsArray);
+        // Hero
+        PathNode startNode = pathNodes.first();
+        hero = new Hero(
+            "Catwoman",
+            "vigilante",
+            30,
+            "web-shooters",
+            "Expert at scaling buildings and fast movement",
+            3, 5, 4,
+            "catwoman",
+            startNode.getPosition().x,
+            startNode.getPosition().y
+        );
+    }
 
-        shapeRenderer = new ShapeRenderer();
-
-        // Initialize hero selection UI
+    private void initUI() {
         uiStage = new Stage(new ScreenViewport());
+
         heroSelectionPanel = new HeroSelectionPanel(uiStage, game.assets) {
             @Override
-            protected void onHeroSelected(Hero hero) {
-                Gdx.app.log("MainScreen", "Hero selected: " + hero.getName());
+            protected void onHeroSelected(Hero selectedHero) {
+                Gdx.app.log("MainScreen", "Hero selected: " + selectedHero.getName());
+                // Optional: replace active hero here later.
             }
         };
 
         createButtonSkin();
         createHeroButtons();
     }
+
+    private Map<String, CrimeDefinition> toCrimeDefinitionMap(Array<CrimeDefinition> definitions) {
+        Map<String, CrimeDefinition> map = new HashMap<>();
+        for (CrimeDefinition def : definitions) {
+            map.put(def.getId(), def);
+        }
+        return map;
+    }
+
+    private Map<String, PathNode> toPathNodeMap(Array<PathNode> pathNodes) {
+        Map<String, PathNode> map = new HashMap<>();
+        for (PathNode node : pathNodes) {
+            map.put(node.getId(), node);
+        }
+        return map;
+    }
+
+    // =========================================================
+    // UI setup
+    // =========================================================
 
     private void createButtonSkin() {
         buttonSkin = new Skin();
@@ -133,7 +188,6 @@ public class MainScreen implements Screen {
         buttonTable.top().right();
         buttonTable.pad(20);
 
-        // Single button to open hero selection
         TextButton heroesButton = new TextButton("HEROES", buttonSkin);
         heroesButton.addListener(new ClickListener() {
             @Override
@@ -143,61 +197,138 @@ public class MainScreen implements Screen {
         });
 
         buttonTable.add(heroesButton).width(150).height(50).pad(5).row();
-
         uiStage.addActor(buttonTable);
     }
 
+    // =========================================================
+    // Screen lifecycle
+    // =========================================================
 
     @Override
     public void show() {
-        camera.position.set(
-            viewport.getWorldWidth() / 2f,
-            viewport.getWorldHeight() / 2f,
-            0
-        );
+        camera.position.set(viewport.getWorldWidth() / 2f, viewport.getWorldHeight() / 2f, 0f);
         camera.update();
 
-        Gdx.input.setInputProcessor(uiStage);
+        // UI + world clicks
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(uiStage);
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0, 0, 0, 1);
 
+        update(delta);
+        draw();
+        handleInput();
+
+        uiStage.act(delta);
+        uiStage.draw();
+    }
+
+    private void update(float delta) {
         camera.update();
         spriteBatch.setProjectionMatrix(camera.combined);
 
         crimeSpawnManager.update(delta);
+        hero.update(delta);
+    }
 
+    private void draw() {
+        drawMap();
+        drawCrimes();
+        drawPlannedPath();
+        drawHero();
+    }
+
+    private void drawMap() {
         spriteBatch.begin();
         spriteBatch.draw(mapTexture, 0, 0);
         spriteBatch.end();
+    }
 
+    private void drawCrimes() {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         for (Crime crime : crimeSpawnManager.getActiveCrimes()) {
-
-            // TODO: extend this classification for crime categories
-            switch (crime.getDefinition().getCategory()) {
-                case "minor": shapeRenderer.setColor(0, 1, 0, 1); break; // green
-                case "violent": shapeRenderer.setColor(1, 0, 0, 1); break; // red
-                case "cyber": shapeRenderer.setColor(0, 0, 1, 1); break; // blue
-                default: shapeRenderer.setColor(1, 1, 1, 1); break; // white
-            }
-
-            shapeRenderer.circle(crime.getLocation().getX(),
-                crime.getLocation().getY(),
-                50);
-
+            shapeRenderer.setColor(getCrimeColor(crime));
+            shapeRenderer.circle(crime.getLocation().getX(), crime.getLocation().getY(), CRIME_RADIUS);
         }
 
         shapeRenderer.end();
+    }
 
-        // Draw hero selection UI
-        uiStage.act(delta);
-        uiStage.draw();
+    private Color getCrimeColor(Crime crime) {
+        switch (crime.getDefinition().getCategory()) {
+            case "minor": return new Color(0, 1, 0, 1);
+            case "violent": return new Color(1, 0, 0, 1);
+            case "cyber": return new Color(0, 0, 1, 1);
+            default: return new Color(1, 1, 1, 1);
+        }
+    }
 
+    private void drawPlannedPath() {
+        Array<PathNode> path = hero.getCurrentPath();
+        if (path == null || path.size < 1) return;
+
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(0, 1, 1, 1); // cyan
+
+        int startIdx = Math.min(hero.getCurrentPathIndex(), Math.max(path.size - 1, 0));
+        Vector2 last = hero.getPosition();
+
+        for (int i = startIdx; i < path.size; i++) {
+            Vector2 next = path.get(i).getPosition();
+            shapeRenderer.line(last, next);
+            last = next;
+        }
+
+        shapeRenderer.end();
+    }
+
+    private void drawHero() {
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(1, 1, 0, 1); // yellow
+        shapeRenderer.circle(hero.getPosition().x, hero.getPosition().y, HERO_RADIUS);
+        shapeRenderer.end();
+    }
+
+    private void handleInput() {
+        if (!Gdx.input.justTouched()) return;
+
+        Vector2 clickPos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+        viewport.unproject(clickPos);
+
+        Crime clickedCrime = findClickedCrime(clickPos);
+        if (clickedCrime == null) return;
+
+        Vector2 crimePos = new Vector2(clickedCrime.getLocation().getX(), clickedCrime.getLocation().getY());
+
+        Array<PathNode> path = pathfindingManager.requestPath(hero.getPosition(), crimePos);
+
+        Gdx.app.log("PATH", "Crime clicked: " + clickedCrime.getLocation().getName()
+            + " crimePos=" + crimePos
+            + " pathSize=" + (path == null ? 0 : path.size));
+
+        if (path != null && path.size > 0) {
+            Gdx.app.log("PATH", "Start node: " + path.first().getId() + " -> Goal node: " + path.peek().getId());
+        }
+
+        hero.setPath(path, crimePos);
+    }
+
+    private Crime findClickedCrime(Vector2 clickPos) {
+        for (Crime crime : crimeSpawnManager.getActiveCrimes()) {
+            Vector2 crimePos = new Vector2(crime.getLocation().getX(), crime.getLocation().getY());
+            if (clickPos.dst(crimePos) < CRIME_RADIUS) {
+                return crime;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -207,14 +338,10 @@ public class MainScreen implements Screen {
     }
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() { }
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() { }
 
     @Override
     public void hide() {
