@@ -15,6 +15,7 @@ import si.um.feri.herodispatcher.world.static_objects.CrimeDefinition;
 import si.um.feri.herodispatcher.world.static_objects.CrimeLocation;
 
 public class CrimeSpawnManager {
+    private static final int MAX_ACTIVE_CRIMES = 4;
 
     private final Map<String, CrimeDefinition> crimeDefinitions;
     private final Array<CrimeLocation> crimeLocations;
@@ -34,9 +35,11 @@ public class CrimeSpawnManager {
 
     public void update(float delta) {
         // remove inactive crimes
-        for (int i = 0; i < activeCrimes.size; i++) {
-            activeCrimes.get(i).update(delta);
-            if (activeCrimes.get(i).isFailed() || activeCrimes.get(i).isResolved()) {
+        for (int i = activeCrimes.size - 1; i >= 0; i--) {
+            Crime crime = activeCrimes.get(i);
+            crime.update(delta);
+
+            if (activeCrimes.get(i).isResolved() || activeCrimes.get(i).isFailed()) {
                 activeCrimes.removeIndex(i);
             }
         }
@@ -49,6 +52,11 @@ public class CrimeSpawnManager {
     }
 
     private void trySpawnCrime() {
+
+        if (activeCrimes.size >= MAX_ACTIVE_CRIMES) {
+            return;
+        }
+
         Array<CrimeLocation> availableLocations = new Array<>();
         Set<String> occupiedLocationsIds = getOccupiedLocationIds();
 

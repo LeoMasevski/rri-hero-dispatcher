@@ -3,8 +3,10 @@ package si.um.feri.herodispatcher.world.dynamic_objects;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import si.um.feri.herodispatcher.world.static_objects.PathNode;
+import si.um.feri.herodispatcher.world.dynamic_objects.Crime;
 
 public class Hero {
+    private Crime assignedCrime;
 
     // ---------- Identity / Info ----------
     private final String name;
@@ -55,24 +57,31 @@ public class Hero {
     // ---------- Update ----------
     /** Call every frame to move the hero along the path / to the final target. */
     public void update(float delta) {
+
         // 1) Follow graph nodes
         if (hasPath()) {
             PathNode targetNode = currentPath.get(currentPathIndex);
             moveTowards(targetNode.getPosition(), delta);
 
-            // Once we reach the node, advance to the next node
-            if (position.epsilonEquals(targetNode.getPosition(), 0.5f)) {
+            if (position.epsilonEquals(targetNode.getPosition(), 1.0f)) {
                 position.set(targetNode.getPosition());
                 currentPathIndex++;
             }
             return;
         }
 
-        // 2) Finish at exact target (crime circle position, etc.)
+        // 2) PATH JE KONČAN → HERO JE PRI CRIME
+        if (assignedCrime != null && assignedCrime.isActive()) {
+            assignedCrime.resolve();
+            assignedCrime = null;
+            return;
+        }
+
+        // 3) Optional finalTarget (če ga boš kdaj rabil)
         if (finalTarget != null) {
             moveTowards(finalTarget, delta);
 
-            if (position.epsilonEquals(finalTarget, 0.5f)) {
+            if (position.epsilonEquals(finalTarget, 1.0f)) {
                 position.set(finalTarget);
                 finalTarget = null;
             }
@@ -163,5 +172,10 @@ public class Hero {
 
     public String getImagePath() {
         return "images/heroes/" + heroId + ".jpg";
+    }
+
+    // ---------- Setters ----------
+    public void assignCrime(Crime crime) {
+        this.assignedCrime = crime;
     }
 }

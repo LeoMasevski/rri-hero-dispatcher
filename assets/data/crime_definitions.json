@@ -5,7 +5,7 @@
       "name": "Robbery",
       "description": "Thieves are attempting to steal valuables using force or intimidation.",
       "category": "violent",
-      "duration": 25,
+      "duration": 300,
       "requiredHeroAttribute": "strength"
     },
     {
@@ -13,7 +13,7 @@
       "name": "Hostage Situation",
       "description": "Criminals have taken hostages and negotiations or force are required.",
       "category": "violent",
-      "duration": 35,
+      "duration": 300,
       "requiredHeroAttribute": "intelligence"
     },
     {
@@ -21,7 +21,7 @@
       "name": "Vault Breach",
       "description": "A high-security vault is being broken into, requiring both skill and strength.",
       "category": "high_risk",
-      "duration": 45,
+      "duration": 300,
       "requiredHeroAttribute": "strength"
     },
     {
@@ -29,7 +29,7 @@
       "name": "Smash and Grab",
       "description": "Quick theft involving breaking windows and grabbing valuables.",
       "category": "violent",
-      "duration": 15,
+      "duration": 300,
       "requiredHeroAttribute": "agility"
     },
     {
@@ -37,7 +37,7 @@
       "name": "Armed Intruder",
       "description": "An intruder is armed and causing chaos; quick response is needed.",
       "category": "violent",
-      "duration": 25,
+      "duration": 300,
       "requiredHeroAttribute": "strength"
     },
     {
@@ -45,7 +45,7 @@
       "name": "Kidnapping",
       "description": "A person has been taken against their will and must be rescued.",
       "category": "high_risk",
-      "duration": 45,
+      "duration": 300,
       "requiredHeroAttribute": "intelligence"
     },
     {
@@ -53,7 +53,7 @@
       "name": "Drug Deal",
       "description": "Illegal substances are being exchanged.",
       "category": "minor",
-      "duration": 12,
+      "duration": 300,
       "requiredHeroAttribute": "agility"
     },
     {
@@ -61,7 +61,7 @@
       "name": "Vandalism",
       "description": "Property damage or graffiti is taking place.",
       "category": "minor",
-      "duration": 12,
+      "duration": 300,
       "requiredHeroAttribute": "agility"
     },
     {
@@ -69,7 +69,7 @@
       "name": "Mugging",
       "description": "A person is being attacked for their belongings.",
       "category": "violent",
-      "duration": 15,
+      "duration": 300,
       "requiredHeroAttribute": "strength"
     },
     {
@@ -77,7 +77,7 @@
       "name": "Assault",
       "description": "Physical attack occurring in public.",
       "category": "violent",
-      "duration": 15,
+      "duration": 300,
       "requiredHeroAttribute": "strength"
     },
     {
@@ -85,7 +85,7 @@
       "name": "Corporate Espionage",
       "description": "Sensitive corporate data is being stolen or sabotaged.",
       "category": "cyber",
-      "duration": 35,
+      "duration": 300,
       "requiredHeroAttribute": "intelligence"
     },
     {
@@ -93,7 +93,7 @@
       "name": "Blackmail",
       "description": "Criminals are threatening to expose information unless demands are met.",
       "category": "cyber",
-      "duration": 25,
+      "duration": 300,
       "requiredHeroAttribute": "intelligence"
     },
     {
@@ -101,7 +101,7 @@
       "name": "Cyber Attack",
       "description": "A digital intrusion is targeting critical infrastructure or data.",
       "category": "cyber",
-      "duration": 35,
+      "duration": 300,
       "requiredHeroAttribute": "intelligence"
     },
     {
@@ -109,7 +109,7 @@
       "name": "Data Sabotage",
       "description": "Important data is being deleted or corrupted.",
       "category": "cyber",
-      "duration": 40,
+      "duration": 300,
       "requiredHeroAttribute": "intelligence"
     },
     {
@@ -117,7 +117,7 @@
       "name": "Shoplifting",
       "description": "Minor theft; quick action may prevent loss.",
       "category": "minor",
-      "duration": 10,
+      "duration": 300,
       "requiredHeroAttribute": "agility"
     }
   ]

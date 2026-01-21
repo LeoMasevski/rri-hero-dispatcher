@@ -318,6 +318,7 @@ public class MainScreen implements Screen {
             Gdx.app.log("PATH", "Start node: " + path.first().getId() + " -> Goal node: " + path.peek().getId());
         }
 
+        hero.assignCrime(clickedCrime);
         hero.setPath(path, crimePos);
     }
 

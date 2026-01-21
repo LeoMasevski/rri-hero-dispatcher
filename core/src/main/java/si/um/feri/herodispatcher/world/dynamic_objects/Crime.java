@@ -37,8 +37,9 @@ public class Crime {
 
     // ---------- State control ----------
     public void resolve() {
-        if (crimeState == CrimeState.ACTIVE) {
+        if (crimeState != CrimeState.RESOLVED) {
             crimeState = CrimeState.RESOLVED;
+            System.out.println("Crime RESOLVED, id=" + runtimeId);
         }
     }
 
