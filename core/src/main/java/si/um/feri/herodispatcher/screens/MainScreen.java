@@ -43,7 +43,7 @@ public class MainScreen implements Screen {
 
     // ---------- Constants ----------
     private static final float CRIME_RADIUS = 50f;
-    private static final float HERO_RADIUS = 70f;
+    private static final float HERO_RADIUS = 100f;
 
     // ---------- Core ----------
     private final HeroDispatcherGame game;
@@ -329,10 +329,11 @@ public class MainScreen implements Screen {
     }
 
     private Texture getHeroTexture(String heroId) {
+        // Use the cropped map versions of hero textures
         switch (heroId) {
-            case "angel": return game.assets.heroAngel;
-            case "mime": return game.assets.heroMime;
-            case "whistle": return game.assets.heroWhistle;
+            case "angel": return game.assets.heroAngelMap;
+            case "mime": return game.assets.heroMimeMap;
+            case "whistle": return game.assets.heroWhistleMap;
             default: return null;
         }
     }

@@ -8,8 +8,13 @@ public class AssetDescriptors {
     public static final AssetDescriptor<Skin> SKIN_JSON = new AssetDescriptor<Skin>(AssetsPath.SKIN_JSON, Skin.class);
     public static final AssetDescriptor<Skin> SKIN_ATLAS = new AssetDescriptor<>(AssetsPath.SKIN_ATLAS, Skin.class);
 
-    // New hero textures
+    // Selection panel textures (full versions)
     public static final AssetDescriptor<Texture> HERO_ANGEL = new AssetDescriptor<>(AssetsPath.HERO_ANGEL, Texture.class);
     public static final AssetDescriptor<Texture> HERO_MIME = new AssetDescriptor<>(AssetsPath.HERO_MIME, Texture.class);
     public static final AssetDescriptor<Texture> HERO_WHISTLE = new AssetDescriptor<>(AssetsPath.HERO_WHISTLE, Texture.class);
+
+    // Map textures (profile versions - will be cropped)
+    public static final AssetDescriptor<Texture> HERO_ANGEL_MAP = new AssetDescriptor<>(AssetsPath.HERO_ANGEL_MAP, Texture.class);
+    public static final AssetDescriptor<Texture> HERO_MIME_MAP = new AssetDescriptor<>(AssetsPath.HERO_MIME_MAP, Texture.class);
+    public static final AssetDescriptor<Texture> HERO_WHISTLE_MAP = new AssetDescriptor<>(AssetsPath.HERO_WHISTLE_MAP, Texture.class);
 }
