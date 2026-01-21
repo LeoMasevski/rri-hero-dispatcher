@@ -7,6 +7,7 @@ import si.um.feri.herodispatcher.world.dynamic_objects.Crime;
 
 public class Hero {
     private Crime assignedCrime;
+    private boolean arrivedAtCrime = false;
 
     // ---------- Identity / Info ----------
     private final String name;
@@ -72,8 +73,7 @@ public class Hero {
 
         // 2) PATH JE KONČAN → HERO JE PRI CRIME
         if (assignedCrime != null && assignedCrime.isActive()) {
-            assignedCrime.resolve();
-            assignedCrime = null;
+            arrivedAtCrime = true;
             return;
         }
 
@@ -172,6 +172,18 @@ public class Hero {
 
     public String getImagePath() {
         return "images/heroes/" + heroId + ".jpg";
+    }
+
+    public boolean hasArrivedAtCrime() {
+        return arrivedAtCrime;
+    }
+
+    public void resetArrivedAtCrime() {
+        arrivedAtCrime = false;
+    }
+
+    public Crime getAssignedCrime() {
+        return assignedCrime;
     }
 
     // ---------- Setters ----------

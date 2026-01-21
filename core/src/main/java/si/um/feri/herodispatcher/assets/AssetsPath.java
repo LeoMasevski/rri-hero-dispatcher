@@ -14,5 +14,10 @@ public class AssetsPath {
     public static final String HERO_MIME_MAP = "images/heroes/mime_profile.png";
     public static final String HERO_WHISTLE_MAP = "images/heroes/whistle_profile.png";
 
+    // Bad guys textures - PROFILE versions to capture them
+    public static final String ROBBER = "images/bad_guys/robber.jpg";
+    public static final String CYBER = "images/bad_guys/cyber.jpg";
+    public static final String VIOLENCE = "images/bad_guys/violentCriminal.jpg";
+
     public AssetsPath() {}
 }

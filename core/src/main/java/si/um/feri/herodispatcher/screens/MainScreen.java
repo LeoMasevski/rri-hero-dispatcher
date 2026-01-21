@@ -32,6 +32,7 @@ import si.um.feri.herodispatcher.HeroDispatcherGame;
 import si.um.feri.herodispatcher.data.GameDataLoader;
 import si.um.feri.herodispatcher.managers.CrimeSpawnManager;
 import si.um.feri.herodispatcher.managers.PathfindingManager;
+import si.um.feri.herodispatcher.minigame.MiniGameResult;
 import si.um.feri.herodispatcher.world.dynamic_objects.Crime;
 import si.um.feri.herodispatcher.world.dynamic_objects.Hero;
 import si.um.feri.herodispatcher.world.static_objects.CrimeDefinition;
@@ -40,6 +41,7 @@ import si.um.feri.herodispatcher.world.static_objects.PathGraph;
 import si.um.feri.herodispatcher.world.static_objects.PathNode;
 
 public class MainScreen implements Screen {
+    private Crime activeCrimeForMiniGame;
 
     // ---------- Constants ----------
     private static final float CRIME_RADIUS = 50f;
@@ -248,6 +250,10 @@ public class MainScreen implements Screen {
 
         crimeSpawnManager.update(delta);
         hero.update(delta);
+        if (hero.hasArrivedAtCrime()) {
+            openMiniGame();
+            hero.resetArrivedAtCrime();
+        }
     }
 
     private void draw() {
@@ -361,6 +367,27 @@ public class MainScreen implements Screen {
 
         hero.assignCrime(clickedCrime);
         hero.setPath(path, crimePos);
+    }
+
+    private void openMiniGame() {
+        activeCrimeForMiniGame = hero.getAssignedCrime();
+        Texture heroTexture = getHeroTexture(hero.getHeroId());
+
+        MiniGameScreen miniGameScreen =
+            new MiniGameScreen(buttonSkin, heroTexture, activeCrimeForMiniGame.getDefinition().getCategory(), result -> {
+
+                    if (activeCrimeForMiniGame != null) {
+                        if (result == MiniGameResult.SUCCESS) {
+                            activeCrimeForMiniGame.resolve();
+                        } else {
+                            activeCrimeForMiniGame.fail();
+                        }
+                    }
+                    activeCrimeForMiniGame = null;
+                    game.setScreen(this);
+                }
+            );
+        game.setScreen(miniGameScreen);
     }
 
     private Crime findClickedCrime(Vector2 clickPos) {

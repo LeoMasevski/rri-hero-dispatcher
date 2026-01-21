@@ -23,6 +23,11 @@ public class Assets {
     public Texture heroMimeMap;
     public Texture heroWhistleMap;
 
+    // Bad guys
+    public Texture robber;
+    public Texture cyberCriminal;
+    public Texture violentCriminal;
+
     public Assets() {
         manager = new AssetManager();
     }
@@ -43,6 +48,11 @@ public class Assets {
         manager.load(AssetDescriptors.HERO_MIME_MAP);
         manager.load(AssetDescriptors.HERO_WHISTLE_MAP);
 
+        // Load bad_guys
+        manager.load(AssetDescriptors.ROBBER);
+        manager.load(AssetDescriptors.CYBER);
+        manager.load(AssetDescriptors.VIOLENCE);
+
         manager.finishLoading();
 
         // Get loaded assets
@@ -60,6 +70,11 @@ public class Assets {
         heroAngelMap = cropAndBorder(angelProfile, 200, 3);
         heroMimeMap = cropAndBorder(mimeProfile, 200, 3);
         heroWhistleMap = cropAndBorder(whistleProfile, 200, 3);
+
+        // Get bad guys
+        robber = manager.get(AssetDescriptors.ROBBER);
+        cyberCriminal = manager.get(AssetDescriptors.CYBER);
+        violentCriminal = manager.get(AssetDescriptors.VIOLENCE);
 
         Gdx.app.log("Assets", "All textures cropped and bordered successfully");
     }

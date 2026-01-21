@@ -37,9 +37,16 @@ public class Crime {
 
     // ---------- State control ----------
     public void resolve() {
-        if (crimeState != CrimeState.RESOLVED) {
+        if (crimeState == CrimeState.ACTIVE) {
             crimeState = CrimeState.RESOLVED;
             System.out.println("Crime RESOLVED, id=" + runtimeId);
+        }
+    }
+
+    public void fail() {
+        if (crimeState == CrimeState.ACTIVE) {
+            crimeState = CrimeState.FAILED;
+            System.out.println("Crime FAILED, id=" + runtimeId);
         }
     }
 
@@ -72,5 +79,7 @@ public class Crime {
     public boolean isFailed() { return crimeState == CrimeState.FAILED; }
 
     public boolean isResolved() { return crimeState == CrimeState.RESOLVED; }
+
+
 
 }

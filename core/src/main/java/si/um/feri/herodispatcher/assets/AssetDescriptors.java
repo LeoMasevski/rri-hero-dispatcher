@@ -17,4 +17,9 @@ public class AssetDescriptors {
     public static final AssetDescriptor<Texture> HERO_ANGEL_MAP = new AssetDescriptor<>(AssetsPath.HERO_ANGEL_MAP, Texture.class);
     public static final AssetDescriptor<Texture> HERO_MIME_MAP = new AssetDescriptor<>(AssetsPath.HERO_MIME_MAP, Texture.class);
     public static final AssetDescriptor<Texture> HERO_WHISTLE_MAP = new AssetDescriptor<>(AssetsPath.HERO_WHISTLE_MAP, Texture.class);
+
+    // Minigame bad_guys
+    public static final AssetDescriptor<Texture> ROBBER = new AssetDescriptor<>(AssetsPath.ROBBER, Texture.class);
+    public static final AssetDescriptor<Texture> CYBER = new AssetDescriptor<>(AssetsPath.CYBER, Texture.class);
+    public static final AssetDescriptor<Texture> VIOLENCE = new AssetDescriptor<>(AssetsPath.VIOLENCE, Texture.class);
 }
