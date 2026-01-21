@@ -19,6 +19,10 @@ public class PathfindingManager {
         this.pathFinder = new PathFinder();
     }
 
+    public PathGraph getGraph() {
+        return graph;
+    }
+
     public Array<PathNode> requestPath(Vector2 startPos, Vector2 targetPos) {
         if (startPos == null || targetPos == null) return new Array<>();
 

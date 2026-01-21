@@ -8,7 +8,8 @@ public class AssetDescriptors {
     public static final AssetDescriptor<Skin> SKIN_JSON = new AssetDescriptor<Skin>(AssetsPath.SKIN_JSON, Skin.class);
     public static final AssetDescriptor<Skin> SKIN_ATLAS = new AssetDescriptor<>(AssetsPath.SKIN_ATLAS, Skin.class);
 
-    public static final AssetDescriptor<Texture> HERO_SPIDERMAN = new AssetDescriptor<>(AssetsPath.HERO_SPIDERMAN, Texture.class);
-    public static final AssetDescriptor<Texture> HERO_CATWOMAN = new AssetDescriptor<>(AssetsPath.HERO_CATWOMAN, Texture.class);
-    public static final AssetDescriptor<Texture> HERO_DEADPOOL = new AssetDescriptor<>(AssetsPath.HERO_DEADPOOL, Texture.class);
+    // New hero textures
+    public static final AssetDescriptor<Texture> HERO_ANGEL = new AssetDescriptor<>(AssetsPath.HERO_ANGEL, Texture.class);
+    public static final AssetDescriptor<Texture> HERO_MIME = new AssetDescriptor<>(AssetsPath.HERO_MIME, Texture.class);
+    public static final AssetDescriptor<Texture> HERO_WHISTLE = new AssetDescriptor<>(AssetsPath.HERO_WHISTLE, Texture.class);
 }

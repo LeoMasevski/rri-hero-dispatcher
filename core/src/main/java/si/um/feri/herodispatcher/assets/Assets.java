@@ -12,10 +12,10 @@ public class Assets {
     public Skin uiSkin;
     public BitmapFont font;
 
-    // Hero textures
-    public Texture heroSpiderman;
-    public Texture heroCatwoman;
-    public Texture heroDeadpool;
+    // New hero textures
+    public Texture heroAngel;
+    public Texture heroMime;
+    public Texture heroWhistle;
 
     public Assets() {
         manager = new AssetManager();
@@ -27,18 +27,18 @@ public class Assets {
         // Load UI skin
         manager.load(AssetsPath.SKIN_JSON, Skin.class, new SkinLoader.SkinParameter(AssetsPath.SKIN_ATLAS));
 
-        // Load hero textures
-        manager.load(AssetDescriptors.HERO_SPIDERMAN);
-        manager.load(AssetDescriptors.HERO_CATWOMAN);
-        manager.load(AssetDescriptors.HERO_DEADPOOL);
+        // Load new hero textures
+        manager.load(AssetDescriptors.HERO_ANGEL);
+        manager.load(AssetDescriptors.HERO_MIME);
+        manager.load(AssetDescriptors.HERO_WHISTLE);
 
         manager.finishLoading();
 
         // Get loaded assets
         uiSkin = manager.get(AssetsPath.SKIN_JSON, Skin.class);
-        heroSpiderman = manager.get(AssetDescriptors.HERO_SPIDERMAN);
-        heroCatwoman = manager.get(AssetDescriptors.HERO_CATWOMAN);
-        heroDeadpool = manager.get(AssetDescriptors.HERO_DEADPOOL);
+        heroAngel = manager.get(AssetDescriptors.HERO_ANGEL);
+        heroMime = manager.get(AssetDescriptors.HERO_MIME);
+        heroWhistle = manager.get(AssetDescriptors.HERO_WHISTLE);
     }
 
     public void dispose() {

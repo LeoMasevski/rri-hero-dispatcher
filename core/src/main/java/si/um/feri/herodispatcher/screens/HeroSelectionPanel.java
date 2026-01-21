@@ -47,6 +47,9 @@ public class HeroSelectionPanel implements Disposable {
     private final Color CARD_BG = new Color(1, 1, 1, 0.98f);
     private final Color TEXT_COLOR = new Color(0.15f, 0.15f, 0.15f, 1);
 
+    // Track textures for disposal
+    private Array<Texture> createdTextures = new Array<>();
+
     public HeroSelectionPanel(Stage stage, Assets assets) {
         this.stage = stage;
         this.assets = assets;
@@ -152,6 +155,7 @@ public class HeroSelectionPanel implements Disposable {
         pixmap.setColor(color);
         pixmap.fill();
         Texture texture = new Texture(pixmap);
+        createdTextures.add(texture); // Track for disposal
         pixmap.dispose();
         return new TextureRegionDrawable(new TextureRegion(texture));
     }
@@ -161,6 +165,7 @@ public class HeroSelectionPanel implements Disposable {
         pixmap.setColor(color);
         pixmap.fill();
         Texture texture = new Texture(pixmap);
+        createdTextures.add(texture); // Track for disposal
         pixmap.dispose();
         return new TextureRegionDrawable(new TextureRegion(texture));
     }
@@ -353,17 +358,18 @@ public class HeroSelectionPanel implements Disposable {
     private Texture getHeroTexture(int index) {
         if (index >= heroes.size) return null;
 
-        // Get full path like "images/heroes/spiderman.jpg"
-        String heroPath = heroes.get(index).getHeroId();
+        // Get heroId directly (no parsing needed since it's just "angel", "mime", "whistle")
+        String heroId = heroes.get(index).getHeroId();
 
-        // Extract just the hero name (spiderman, catwoman, deadpool)
-        String heroId = heroPath.substring(heroPath.lastIndexOf("/") + 1, heroPath.lastIndexOf("."));
+        Gdx.app.log("HeroPanel", "Loading texture for heroId: " + heroId);
 
         switch (heroId) {
-            case "spiderman": return assets.heroSpiderman;
-            case "catwoman": return assets.heroCatwoman;
-            case "deadpool": return assets.heroDeadpool;
-            default: return null;
+            case "angel": return assets.heroAngel;
+            case "mime": return assets.heroMime;
+            case "whistle": return assets.heroWhistle;
+            default:
+                Gdx.app.log("HeroPanel", "Unknown heroId: " + heroId);
+                return null;
         }
     }
 
@@ -394,5 +400,9 @@ public class HeroSelectionPanel implements Disposable {
     @Override
     public void dispose() {
         skin.dispose();
+        // Dispose created textures
+        for (Texture tex : createdTextures) {
+            tex.dispose();
+        }
     }
 }

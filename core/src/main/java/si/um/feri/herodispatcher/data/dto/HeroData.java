@@ -8,43 +8,43 @@ public class HeroData {
     public static Array<Hero> getAllHeroes() {
         Array<Hero> heroes = new Array<>();
 
-        // Spider-Man - strong in agility
+        // Angel - balanced hero with wings
         heroes.add(new Hero(
-            "Spider-Man",
-            "Superhero",
-            23,
-            "Web-shooters",
-            "Bitten by radioactive spider. Great power comes with great responsibility. Lives in New York City and fights crime with spider abilities.",
+            "Angel",
+            "Mutant",
+            28,
+            "Wings, Aerial Combat",
+            "Mutant with large feathered wings granting flight. Enhanced strength and agility in aerial combat. Former X-Men member known for nobility and honor.",
             4, // strength
-            5, // intelligence (Peter Parker is a genius)
-            5, // agility
-            "images/heroes/spiderman.jpg"
-        ));
-
-        // Catwoman - most agile
-        heroes.add(new Hero(
-            "Catwoman",
-            "Anti-hero",
-            32,
-            "Whip, Claws",
-            "Master thief from Gotham City. Skilled acrobat and martial artist. Complex relationship with Batman.",
-            3, // strength
             4, // intelligence
-            5, // agility (most agile!)
-            "images/heroes/catwoman.jpg"
+            5, // agility - highest (flight!)
+            "angel"
         ));
 
-        // Deadpool - regeneration, strong fighter
+        // Mime - intelligence focused
         heroes.add(new Hero(
-            "Deadpool",
-            "Mercenary",
-            35,
-            "Katanas, Guns",
-            "Regenerative healing factor. Breaks the fourth wall. Extremely skilled mercenary with dark humor and unpredictable fighting style.",
-            5, // strength (regeneration = high stamina/strength)
-            3, // intelligence (a bit confused)
+            "Mime",
+            "Psychic",
+            30,
+            "Psychic Barriers",
+            "Creates invisible psychic force fields and barriers. Master of silent combat and stealth. Uses mime techniques to confuse and trap enemies.",
+            3, // strength
+            5, // intelligence - highest (psychic powers)
             4, // agility
-            "images/heroes/deadpool.jpg"
+            "mime"
+        ));
+
+        // Whistle - strength focused
+        heroes.add(new Hero(
+            "Whistle",
+            "Vigilante",
+            35,
+            "Sonic Whistle, Enhanced Reflexes",
+            "Uses powerful sonic whistles to disorient enemies and signal for help. Expert driver and street fighter. Protects the city's highways and streets.",
+            5, // strength - highest (physical combat)
+            3, // intelligence
+            4, // agility
+            "whistle"
         ));
 
         return heroes;

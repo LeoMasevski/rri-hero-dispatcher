@@ -102,16 +102,16 @@ public class MainScreen implements Screen {
         PathGraph pathGraph = new PathGraph(toPathNodeMap(pathNodes));
         pathfindingManager = new PathfindingManager(pathGraph);
 
-        // Hero
+        // Hero - starting with Angel
         PathNode startNode = pathNodes.first();
         hero = new Hero(
-            "Catwoman",
-            "vigilante",
-            30,
-            "web-shooters",
-            "Expert at scaling buildings and fast movement",
-            3, 5, 4,
-            "catwoman",
+            "Angel",
+            "Mutant",
+            28,
+            "Wings, Aerial Combat",
+            "Mutant with large feathered wings granting flight. Enhanced strength and agility in aerial combat.",
+            4, 4, 5,
+            "angel",
             startNode.getPosition().x,
             startNode.getPosition().y
         );
@@ -124,7 +124,22 @@ public class MainScreen implements Screen {
             @Override
             protected void onHeroSelected(Hero selectedHero) {
                 Gdx.app.log("MainScreen", "Hero selected: " + selectedHero.getName());
-                // Optional: replace active hero here later.
+
+                // Replace active hero with selected one
+                PathNode currentNode = pathfindingManager.getGraph().findClosestNode(hero.getPosition());
+                hero = new Hero(
+                    selectedHero.getName(),
+                    selectedHero.getType(),
+                    selectedHero.getAge(),
+                    selectedHero.getWeapon(),
+                    selectedHero.getInfoFacts(),
+                    selectedHero.getStrength(),
+                    selectedHero.getIntelligence(),
+                    selectedHero.getAgility(),
+                    selectedHero.getHeroId(),
+                    currentNode.getPosition().x,
+                    currentNode.getPosition().y
+                );
             }
         };
 
@@ -290,11 +305,36 @@ public class MainScreen implements Screen {
     }
 
     private void drawHero() {
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(1, 1, 0, 1); // yellow
-        shapeRenderer.circle(hero.getPosition().x, hero.getPosition().y, HERO_RADIUS);
-        shapeRenderer.end();
+        spriteBatch.begin();
+
+        Texture heroTexture = getHeroTexture(hero.getHeroId());
+        if (heroTexture != null) {
+            float size = HERO_RADIUS * 2;
+            spriteBatch.draw(heroTexture,
+                hero.getPosition().x - HERO_RADIUS,
+                hero.getPosition().y - HERO_RADIUS,
+                size, size);
+        } else {
+            // Fallback to circle if texture not found
+            spriteBatch.end();
+            shapeRenderer.setProjectionMatrix(camera.combined);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(1, 1, 0, 1); // yellow
+            shapeRenderer.circle(hero.getPosition().x, hero.getPosition().y, HERO_RADIUS);
+            shapeRenderer.end();
+            return;
+        }
+
+        spriteBatch.end();
+    }
+
+    private Texture getHeroTexture(String heroId) {
+        switch (heroId) {
+            case "angel": return game.assets.heroAngel;
+            case "mime": return game.assets.heroMime;
+            case "whistle": return game.assets.heroWhistle;
+            default: return null;
+        }
     }
 
     private void handleInput() {
