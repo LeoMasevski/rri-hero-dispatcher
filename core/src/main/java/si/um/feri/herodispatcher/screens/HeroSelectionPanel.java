@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,11 +20,12 @@ import si.um.feri.herodispatcher.world.dynamic_objects.Hero;
 /**
  * Hero Selection Panel - overlay UI that appears on MainScreen
  * Shows hero details with carousel navigation
+ * Now uses the shared UI skin for consistent styling
  */
 public class HeroSelectionPanel implements Disposable {
 
     private Stage stage;
-    private Skin skin;
+    private Skin skin; // Shared skin from Assets
     private Assets assets;
     private Array<Hero> heroes;
     private int currentHeroIndex = 0;
@@ -40,12 +40,9 @@ public class HeroSelectionPanel implements Disposable {
 
     private boolean isVisible = false;
 
-    // Colors
-    private final Color PRIMARY_COLOR = new Color(0.25f, 0.35f, 0.65f, 1);
-    private final Color ACCENT_COLOR = new Color(0.95f, 0.5f, 0.2f, 1);
-    private final Color BG_COLOR = new Color(0.1f, 0.1f, 0.15f, 0.92f); // Dark semi-transparent
+    // Colors for custom drawables
+    private final Color BG_COLOR = new Color(0.1f, 0.1f, 0.15f, 0.92f);
     private final Color CARD_BG = new Color(1, 1, 1, 0.98f);
-    private final Color TEXT_COLOR = new Color(0.15f, 0.15f, 0.15f, 1);
 
     // Track textures for disposal
     private Array<Texture> createdTextures = new Array<>();
@@ -53,111 +50,11 @@ public class HeroSelectionPanel implements Disposable {
     public HeroSelectionPanel(Stage stage, Assets assets) {
         this.stage = stage;
         this.assets = assets;
+        this.skin = assets.uiSkin; // Use the shared skin!
         this.heroes = HeroData.getAllHeroes();
 
-        createSkin();
         createUI();
         hide(); // Start hidden
-    }
-
-    private void createSkin() {
-        skin = new Skin();
-
-        // Fonts
-        BitmapFont normalFont = new BitmapFont();
-        normalFont.getData().setScale(1.0f);
-        skin.add("normal", normalFont);
-
-        BitmapFont boldFont = new BitmapFont();
-        boldFont.getData().setScale(1.2f);
-        skin.add("bold", boldFont);
-
-        BitmapFont titleFont = new BitmapFont();
-        titleFont.getData().setScale(1.6f);
-        skin.add("title-font", titleFont);
-
-        BitmapFont statFont = new BitmapFont();
-        statFont.getData().setScale(2.2f);
-        skin.add("stat-font", statFont);
-
-        BitmapFont arrowFont = new BitmapFont();
-        arrowFont.getData().setScale(2.5f);
-        skin.add("arrow", arrowFont);
-
-        // Label styles
-        Label.LabelStyle normalStyle = new Label.LabelStyle();
-        normalStyle.font = normalFont;
-        normalStyle.fontColor = TEXT_COLOR;
-        skin.add("default", normalStyle);
-
-        Label.LabelStyle boldStyle = new Label.LabelStyle();
-        boldStyle.font = boldFont;
-        boldStyle.fontColor = TEXT_COLOR;
-        skin.add("bold", boldStyle);
-
-        Label.LabelStyle titleStyle = new Label.LabelStyle();
-        titleStyle.font = titleFont;
-        titleStyle.fontColor = PRIMARY_COLOR;
-        skin.add("title", titleStyle);
-
-        Label.LabelStyle statStyle = new Label.LabelStyle();
-        statStyle.font = statFont;
-        statStyle.fontColor = ACCENT_COLOR;
-        skin.add("stat", statStyle);
-
-        Label.LabelStyle typeStyle = new Label.LabelStyle();
-        typeStyle.font = normalFont;
-        typeStyle.fontColor = new Color(0.5f, 0.5f, 0.5f, 1);
-        skin.add("type", typeStyle);
-
-        Label.LabelStyle arrowStyle = new Label.LabelStyle();
-        arrowStyle.font = arrowFont;
-        arrowStyle.fontColor = PRIMARY_COLOR;
-        skin.add("arrow", arrowStyle);
-
-        // Button styles
-        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.font = boldFont;
-        buttonStyle.fontColor = Color.WHITE;
-        buttonStyle.overFontColor = Color.WHITE;
-        buttonStyle.downFontColor = Color.WHITE;
-
-        buttonStyle.up = createButtonDrawable(PRIMARY_COLOR);
-        buttonStyle.over = createButtonDrawable(new Color(0.3f, 0.45f, 0.75f, 1));
-        buttonStyle.down = createButtonDrawable(new Color(0.2f, 0.3f, 0.6f, 1));
-
-        skin.add("default", buttonStyle);
-
-        // Arrow button style
-        TextButton.TextButtonStyle arrowButtonStyle = new TextButton.TextButtonStyle();
-        arrowButtonStyle.font = arrowFont;
-        arrowButtonStyle.fontColor = PRIMARY_COLOR;
-        arrowButtonStyle.overFontColor = new Color(0.4f, 0.55f, 0.85f, 1);
-        arrowButtonStyle.downFontColor = new Color(0.2f, 0.3f, 0.6f, 1);
-        skin.add("arrow-button", arrowButtonStyle);
-
-        // Close button style (red)
-        TextButton.TextButtonStyle closeButtonStyle = new TextButton.TextButtonStyle();
-        closeButtonStyle.font = boldFont;
-        closeButtonStyle.fontColor = Color.WHITE;
-        closeButtonStyle.overFontColor = Color.WHITE;
-        closeButtonStyle.downFontColor = Color.WHITE;
-
-        closeButtonStyle.up = createButtonDrawable(new Color(0.85f, 0.2f, 0.2f, 1));
-        closeButtonStyle.over = createButtonDrawable(new Color(0.95f, 0.3f, 0.3f, 1));
-        closeButtonStyle.down = createButtonDrawable(new Color(0.75f, 0.15f, 0.15f, 1));
-
-        skin.add("close", closeButtonStyle);
-    }
-
-    private TextureRegionDrawable createButtonDrawable(Color color) {
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(color);
-        pixmap.fill();
-        Texture texture = new Texture(pixmap);
-        createdTextures.add(texture); // Track for disposal
-        pixmap.dispose();
-        return new TextureRegionDrawable(new TextureRegion(texture));
     }
 
     private TextureRegionDrawable createColorDrawable(Color color) {
@@ -184,10 +81,11 @@ public class HeroSelectionPanel implements Disposable {
         // Title with close button
         Table headerTable = new Table();
 
-        Label titleLabel = new Label("SELECT HERO", skin, "title");
+        Label titleLabel = new Label("SELECT HERO", skin);
+        titleLabel.setFontScale(2.0f); // Make title bigger
         headerTable.add(titleLabel).expandX().left().padBottom(15);
 
-        TextButton closeButton = new TextButton("X", skin, "close");
+        TextButton closeButton = new TextButton("X", skin);
         closeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -204,7 +102,8 @@ public class HeroSelectionPanel implements Disposable {
         // Left side - Hero image
         Table leftTable = new Table();
 
-        typeLabel = new Label("", skin, "type");
+        typeLabel = new Label("", skin);
+        typeLabel.setFontScale(0.9f);
         leftTable.add(typeLabel).left().padBottom(8).row();
 
         Container<Image> imageContainer = new Container<>();
@@ -216,7 +115,7 @@ public class HeroSelectionPanel implements Disposable {
         // Hero selector with arrows
         Table selectorTable = new Table();
 
-        TextButton leftArrow = new TextButton("<", skin, "arrow-button");
+        TextButton leftArrow = new TextButton("<", skin);
         leftArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -229,10 +128,11 @@ public class HeroSelectionPanel implements Disposable {
         });
         selectorTable.add(leftArrow).width(60).padRight(20);
 
-        nameLabel = new Label("", skin, "bold");
+        nameLabel = new Label("", skin);
+        nameLabel.setFontScale(1.3f); // Make hero name bigger
         selectorTable.add(nameLabel).expandX().center();
 
-        TextButton rightArrow = new TextButton(">", skin, "arrow-button");
+        TextButton rightArrow = new TextButton(">", skin);
         rightArrow.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -253,8 +153,8 @@ public class HeroSelectionPanel implements Disposable {
         basicInfoTable.pad(12);
         basicInfoTable.defaults().left().padTop(5).padBottom(5);
 
-        ageLabel = new Label("", skin, "default");
-        weaponLabel = new Label("", skin, "default");
+        ageLabel = new Label("", skin);
+        weaponLabel = new Label("", skin);
 
         basicInfoTable.add(ageLabel).row();
         basicInfoTable.add(weaponLabel).row();
@@ -271,22 +171,32 @@ public class HeroSelectionPanel implements Disposable {
         statsCard.setBackground(createColorDrawable(new Color(0.98f, 0.98f, 0.99f, 1)));
         statsCard.pad(15);
 
-        Label statsTitle = new Label("STATS", skin, "title");
+        Label statsTitle = new Label("STATS", skin);
+        statsTitle.setFontScale(1.5f);
         statsCard.add(statsTitle).left().padBottom(12).colspan(2).row();
 
-        Label strengthLabel = new Label("STR:", skin, "bold");
+        Label strengthLabel = new Label("STR:", skin);
+        strengthLabel.setFontScale(1.1f);
         statsCard.add(strengthLabel).left().padRight(20).padTop(8);
-        strengthNumber = new Label("", skin, "stat");
+
+        strengthNumber = new Label("", skin);
+        strengthNumber.setFontScale(1.8f);
         statsCard.add(strengthNumber).left().padTop(8).row();
 
-        Label intelligenceLabel = new Label("INT:", skin, "bold");
+        Label intelligenceLabel = new Label("INT:", skin);
+        intelligenceLabel.setFontScale(1.1f);
         statsCard.add(intelligenceLabel).left().padRight(20).padTop(8);
-        intelligenceNumber = new Label("", skin, "stat");
+
+        intelligenceNumber = new Label("", skin);
+        intelligenceNumber.setFontScale(1.8f);
         statsCard.add(intelligenceNumber).left().padTop(8).row();
 
-        Label agilityLabel = new Label("AGI:", skin, "bold");
+        Label agilityLabel = new Label("AGI:", skin);
+        agilityLabel.setFontScale(1.1f);
         statsCard.add(agilityLabel).left().padRight(20).padTop(8);
-        agilityNumber = new Label("", skin, "stat");
+
+        agilityNumber = new Label("", skin);
+        agilityNumber.setFontScale(1.8f);
         statsCard.add(agilityNumber).left().padTop(8).row();
 
         rightTable.add(statsCard).width(360).left().padBottom(15).row();
@@ -296,8 +206,10 @@ public class HeroSelectionPanel implements Disposable {
         infoCard.setBackground(createColorDrawable(new Color(0.98f, 0.98f, 0.99f, 1)));
         infoCard.pad(15);
 
-        Label infoTitle = new Label("Info", skin, "bold");
-        infoText = new Label("", skin, "default");
+        Label infoTitle = new Label("Info", skin);
+        infoTitle.setFontScale(1.2f);
+
+        infoText = new Label("", skin);
         infoText.setWrap(true);
 
         infoCard.add(infoTitle).top().left().row();
@@ -358,7 +270,6 @@ public class HeroSelectionPanel implements Disposable {
     private Texture getHeroTexture(int index) {
         if (index >= heroes.size) return null;
 
-        // Get heroId directly (no parsing needed since it's just "angel", "mime", "whistle")
         String heroId = heroes.get(index).getHeroId();
 
         Gdx.app.log("HeroPanel", "Loading texture for heroId: " + heroId);
@@ -399,8 +310,8 @@ public class HeroSelectionPanel implements Disposable {
 
     @Override
     public void dispose() {
-        skin.dispose();
-        // Dispose created textures
+        // Don't dispose the shared skin - it's managed by Assets!
+        // Only dispose textures we created
         for (Texture tex : createdTextures) {
             tex.dispose();
         }

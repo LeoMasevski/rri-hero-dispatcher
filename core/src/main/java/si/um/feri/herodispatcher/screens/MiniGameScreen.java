@@ -6,6 +6,7 @@ import si.um.feri.herodispatcher.minigame.MiniGameResult;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -50,6 +51,9 @@ public class MiniGameScreen implements Screen {
     private Texture heroTexture;
     private String crimeCategory;
 
+    // Custom fonts for white text
+    private BitmapFont whiteFont;
+
 
     public MiniGameScreen(Skin skin, Texture heroTexture, String crimeCategory, Consumer<MiniGameResult> onFinish) {
         this.skin = skin;
@@ -66,6 +70,9 @@ public class MiniGameScreen implements Screen {
         stage = new Stage(viewport);
 
         Gdx.input.setInputProcessor(stage);
+
+        // Create white font for all labels
+        whiteFont = new BitmapFont();
 
         buildUI();
         createHUD();
@@ -87,11 +94,16 @@ public class MiniGameScreen implements Screen {
             new TextureRegionDrawable(new TextureRegion(backgroundTexture))
         );
 
-        BitmapFont font = new BitmapFont();
-        LabelStyle labelStyle = new LabelStyle(font, com.badlogic.gdx.graphics.Color.WHITE);
+        // Create white label style - FORCE WHITE COLOR
+        LabelStyle whiteLabelStyle = new LabelStyle();
+        whiteLabelStyle.font = whiteFont;
+        whiteLabelStyle.fontColor = Color.WHITE;
 
-        Label title = new Label("CRIME IN PROGRESS", labelStyle);
-        Label info = new Label("Capture all the suspects!", labelStyle);
+        Label title = new Label("CRIME IN PROGRESS", whiteLabelStyle);
+        title.setFontScale(1.8f); // Smaller, nicer title
+
+        Label info = new Label("Capture all the suspects!", whiteLabelStyle);
+        info.setFontScale(1.1f);
 
         rootTable.top().padTop(20);
         rootTable.add(title).padBottom(10).row();
@@ -101,12 +113,19 @@ public class MiniGameScreen implements Screen {
     }
 
     private void createHUD() {
-        BitmapFont font = new BitmapFont();
-        LabelStyle style = new Label.LabelStyle(font, com.badlogic.gdx.graphics.Color.WHITE);
+        // Create white label style for HUD - FORCE WHITE COLOR
+        LabelStyle hudStyle = new LabelStyle();
+        hudStyle.font = whiteFont;
+        hudStyle.fontColor = Color.WHITE; // Explicitly set white!
 
-        timeLabel = new Label("TIME: 20", style);
-        scoreLabel = new Label("SCORE: 0", style);
-        targetLabel = new Label("TARGET: " + requiredScore, style);
+        timeLabel = new Label("TIME: 20", hudStyle);
+        timeLabel.setFontScale(1.5f); // Bigger for visibility
+
+        scoreLabel = new Label("SCORE: 0", hudStyle);
+        scoreLabel.setFontScale(1.5f);
+
+        targetLabel = new Label("TARGET: " + requiredScore, hudStyle);
+        targetLabel.setFontScale(1.5f);
 
         Table hudTable = new Table();
         hudTable.setFillParent(true);
@@ -117,12 +136,12 @@ public class MiniGameScreen implements Screen {
 
         hudTable.add(timeLabel)
             .left()
-            .padBottom(6)
+            .padBottom(8)
             .row();
 
         hudTable.add(targetLabel)
             .left()
-            .padBottom(6)
+            .padBottom(8)
             .row();
 
         hudTable.add(scoreLabel)
@@ -164,7 +183,7 @@ public class MiniGameScreen implements Screen {
                 return Gdx.app.getApplicationListener()
                     instanceof HeroDispatcherGame ? ((HeroDispatcherGame) Gdx.app.getApplicationListener()).assets.violentCriminal : null;
 
-                case "cyber":
+            case "cyber":
                 return ((HeroDispatcherGame) Gdx.app.getApplicationListener()).assets.cyberCriminal;
 
             case "minor":
@@ -213,7 +232,7 @@ public class MiniGameScreen implements Screen {
                 score += 10;
                 obj.remove();
                 obstacles.removeIndex(i);
-                System.out.println("HIT!");
+                System.out.println("HIT! Score: " + score);
                 continue;
             }
 
@@ -300,6 +319,9 @@ public class MiniGameScreen implements Screen {
         stage.dispose();
         if (backgroundTexture != null) {
             backgroundTexture.dispose();
+        }
+        if (whiteFont != null) {
+            whiteFont.dispose();
         }
     }
 }

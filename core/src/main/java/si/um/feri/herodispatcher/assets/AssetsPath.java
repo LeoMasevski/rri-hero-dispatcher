@@ -19,5 +19,8 @@ public class AssetsPath {
     public static final String CYBER = "images/bad_guys/cyber.jpg";
     public static final String VIOLENCE = "images/bad_guys/violentCriminal.jpg";
 
+    // Background image for menu
+    public static final String MENU_BACKGROUND = "images/background/background.jpg";
+
     public AssetsPath() {}
 }

@@ -28,6 +28,9 @@ public class Assets {
     public Texture cyberCriminal;
     public Texture violentCriminal;
 
+    // Menu background
+    public Texture menuBackground;
+
     public Assets() {
         manager = new AssetManager();
     }
@@ -53,6 +56,9 @@ public class Assets {
         manager.load(AssetDescriptors.CYBER);
         manager.load(AssetDescriptors.VIOLENCE);
 
+        // Load menu background
+        manager.load(AssetDescriptors.MENU_BACKGROUND);
+
         manager.finishLoading();
 
         // Get loaded assets
@@ -76,7 +82,10 @@ public class Assets {
         cyberCriminal = manager.get(AssetDescriptors.CYBER);
         violentCriminal = manager.get(AssetDescriptors.VIOLENCE);
 
-        Gdx.app.log("Assets", "All textures cropped and bordered successfully");
+        // Get menu background
+        menuBackground = manager.get(AssetDescriptors.MENU_BACKGROUND);
+
+        Gdx.app.log("Assets", "All textures loaded successfully");
     }
 
     /**
@@ -179,11 +188,12 @@ public class Assets {
     }
 
     public void dispose() {
-        manager.dispose();
-
-        // Dispose manually created textures
+        // Dispose manually created textures FIRST
         if (heroAngelMap != null) heroAngelMap.dispose();
         if (heroMimeMap != null) heroMimeMap.dispose();
         if (heroWhistleMap != null) heroWhistleMap.dispose();
+
+        // Then dispose the manager
+        manager.dispose();
     }
 }

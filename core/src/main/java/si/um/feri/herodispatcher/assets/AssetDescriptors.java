@@ -22,4 +22,7 @@ public class AssetDescriptors {
     public static final AssetDescriptor<Texture> ROBBER = new AssetDescriptor<>(AssetsPath.ROBBER, Texture.class);
     public static final AssetDescriptor<Texture> CYBER = new AssetDescriptor<>(AssetsPath.CYBER, Texture.class);
     public static final AssetDescriptor<Texture> VIOLENCE = new AssetDescriptor<>(AssetsPath.VIOLENCE, Texture.class);
+
+    // Menu background
+    public static final AssetDescriptor<Texture> MENU_BACKGROUND = new AssetDescriptor<>(AssetsPath.MENU_BACKGROUND, Texture.class);
 }

@@ -5,20 +5,15 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -67,7 +62,6 @@ public class MainScreen implements Screen {
     // ---------- UI ----------
     private Stage uiStage;
     private HeroSelectionPanel heroSelectionPanel;
-    private Skin buttonSkin;
 
     public MainScreen(HeroDispatcherGame heroDispatcherGame) {
         this.game = heroDispatcherGame;
@@ -145,7 +139,6 @@ public class MainScreen implements Screen {
             }
         };
 
-        createButtonSkin();
         createHeroButtons();
     }
 
@@ -169,43 +162,13 @@ public class MainScreen implements Screen {
     // UI setup
     // =========================================================
 
-    private void createButtonSkin() {
-        buttonSkin = new Skin();
-
-        BitmapFont font = new BitmapFont();
-        font.getData().setScale(1.2f);
-        buttonSkin.add("default", font);
-
-        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.font = font;
-        buttonStyle.fontColor = Color.WHITE;
-        buttonStyle.overFontColor = Color.WHITE;
-        buttonStyle.downFontColor = Color.WHITE;
-
-        Color btnColor = new Color(0.25f, 0.35f, 0.65f, 0.9f);
-        buttonStyle.up = createButtonDrawable(btnColor);
-        buttonStyle.over = createButtonDrawable(new Color(0.3f, 0.45f, 0.75f, 0.9f));
-        buttonStyle.down = createButtonDrawable(new Color(0.2f, 0.3f, 0.6f, 0.9f));
-
-        buttonSkin.add("default", buttonStyle);
-    }
-
-    private TextureRegionDrawable createButtonDrawable(Color color) {
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(color);
-        pixmap.fill();
-        Texture texture = new Texture(pixmap);
-        pixmap.dispose();
-        return new TextureRegionDrawable(new TextureRegion(texture));
-    }
-
     private void createHeroButtons() {
         Table buttonTable = new Table();
         buttonTable.setFillParent(true);
         buttonTable.top().right();
         buttonTable.pad(20);
 
-        TextButton heroesButton = new TextButton("HEROES", buttonSkin);
+        TextButton heroesButton = new TextButton("HEROES", game.assets.uiSkin);
         heroesButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -373,20 +336,23 @@ public class MainScreen implements Screen {
         activeCrimeForMiniGame = hero.getAssignedCrime();
         Texture heroTexture = getHeroTexture(hero.getHeroId());
 
-        MiniGameScreen miniGameScreen =
-            new MiniGameScreen(buttonSkin, heroTexture, activeCrimeForMiniGame.getDefinition().getCategory(), result -> {
-
-                    if (activeCrimeForMiniGame != null) {
-                        if (result == MiniGameResult.SUCCESS) {
-                            activeCrimeForMiniGame.resolve();
-                        } else {
-                            activeCrimeForMiniGame.fail();
-                        }
+        // Pass the skin from game.assets instead of game itself
+        MiniGameScreen miniGameScreen = new MiniGameScreen(
+            game.assets.uiSkin,  // <-- Pass the skin here
+            heroTexture,
+            activeCrimeForMiniGame.getDefinition().getCategory(),
+            result -> {
+                if (activeCrimeForMiniGame != null) {
+                    if (result == MiniGameResult.SUCCESS) {
+                        activeCrimeForMiniGame.resolve();
+                    } else {
+                        activeCrimeForMiniGame.fail();
                     }
-                    activeCrimeForMiniGame = null;
-                    game.setScreen(this);
                 }
-            );
+                activeCrimeForMiniGame = null;
+                game.setScreen(this);
+            }
+        );
         game.setScreen(miniGameScreen);
     }
 
@@ -424,6 +390,5 @@ public class MainScreen implements Screen {
         shapeRenderer.dispose();
         uiStage.dispose();
         heroSelectionPanel.dispose();
-        buttonSkin.dispose();
     }
 }
