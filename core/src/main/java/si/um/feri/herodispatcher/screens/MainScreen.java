@@ -71,10 +71,6 @@ public class MainScreen implements Screen {
         initUI();
     }
 
-    // =========================================================
-    // Init
-    // =========================================================
-
     private void initRendering() {
         mapTexture = new Texture(Gdx.files.internal("images/raw/central_city_map.png"));
 
@@ -88,17 +84,17 @@ public class MainScreen implements Screen {
     private void initWorldAndSystems() {
         GameDataLoader loader = new GameDataLoader();
 
-        // Crimes
+        // crimes
         Array<CrimeDefinition> definitionsArray = loader.loadCrimeDefinitions();
         Array<CrimeLocation> locationsArray = loader.loadCrimeLocations();
         crimeSpawnManager = new CrimeSpawnManager(toCrimeDefinitionMap(definitionsArray), locationsArray);
 
-        // Pathfinding
+        // pathfinding
         Array<PathNode> pathNodes = loader.loadPathGraph();
         PathGraph pathGraph = new PathGraph(toPathNodeMap(pathNodes));
         pathfindingManager = new PathfindingManager(pathGraph);
 
-        // Hero - starting with Angel
+        // hero
         PathNode startNode = pathNodes.first();
         hero = new Hero(
             "Angel",
@@ -121,7 +117,6 @@ public class MainScreen implements Screen {
             protected void onHeroSelected(Hero selectedHero) {
                 Gdx.app.log("MainScreen", "Hero selected: " + selectedHero.getName());
 
-                // Replace active hero with selected one
                 PathNode currentNode = pathfindingManager.getGraph().findClosestNode(hero.getPosition());
                 hero = new Hero(
                     selectedHero.getName(),
@@ -158,10 +153,6 @@ public class MainScreen implements Screen {
         return map;
     }
 
-    // =========================================================
-    // UI setup
-    // =========================================================
-
     private void createHeroButtons() {
         Table buttonTable = new Table();
         buttonTable.setFillParent(true);
@@ -179,10 +170,6 @@ public class MainScreen implements Screen {
         buttonTable.add(heroesButton).width(150).height(50).pad(5).row();
         uiStage.addActor(buttonTable);
     }
-
-    // =========================================================
-    // Screen lifecycle
-    // =========================================================
 
     @Override
     public void show() {
@@ -284,7 +271,6 @@ public class MainScreen implements Screen {
                 hero.getPosition().y - HERO_RADIUS,
                 size, size);
         } else {
-            // Fallback to circle if texture not found
             spriteBatch.end();
             shapeRenderer.setProjectionMatrix(camera.combined);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -298,7 +284,6 @@ public class MainScreen implements Screen {
     }
 
     private Texture getHeroTexture(String heroId) {
-        // Use the cropped map versions of hero textures
         switch (heroId) {
             case "angel": return game.assets.heroAngelMap;
             case "mime": return game.assets.heroMimeMap;
@@ -336,9 +321,8 @@ public class MainScreen implements Screen {
         activeCrimeForMiniGame = hero.getAssignedCrime();
         Texture heroTexture = getHeroTexture(hero.getHeroId());
 
-        // Pass the skin from game.assets instead of game itself
         MiniGameScreen miniGameScreen = new MiniGameScreen(
-            game.assets.uiSkin,  // <-- Pass the skin here
+            game.assets.uiSkin,
             heroTexture,
             activeCrimeForMiniGame.getDefinition().getCategory(),
             result -> {

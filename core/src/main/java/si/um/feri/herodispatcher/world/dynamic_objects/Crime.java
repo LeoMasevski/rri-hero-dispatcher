@@ -6,13 +6,13 @@ import si.um.feri.herodispatcher.world.static_objects.CrimeState;
 
 public class Crime {
 
-    private final int runtimeId; // helpful for logs and debugging;
+    private final int runtimeId;
 
     private final CrimeDefinition crimeDefinition;
     private final CrimeLocation crimeLocation;
 
     private float crimeDuration;
-    private CrimeState crimeState; // crimeState is not final as it is changing as time passes
+    private CrimeState crimeState;
 
     public Crime(int runtimeId, CrimeDefinition crimeDefinition, CrimeLocation crimeLocation) {
         this.runtimeId = runtimeId;
@@ -20,10 +20,9 @@ public class Crime {
         this.crimeLocation = crimeLocation;
 
         this.crimeDuration = crimeDefinition.getDuration();
-        this.crimeState = CrimeState.ACTIVE; // initial state after crime has spawned
+        this.crimeState = CrimeState.ACTIVE;
     }
 
-    // ---------- Update ----------
     public void update(float delta) {
         if (crimeState != CrimeState.ACTIVE) return;
 
@@ -35,7 +34,6 @@ public class Crime {
         }
     }
 
-    // ---------- State control ----------
     public void resolve() {
         if (crimeState == CrimeState.ACTIVE) {
             crimeState = CrimeState.RESOLVED;
@@ -49,8 +47,6 @@ public class Crime {
             System.out.println("Crime FAILED, id=" + runtimeId);
         }
     }
-
-    // -------- Getters --------
 
     public int getRuntimeId() {
         return runtimeId;

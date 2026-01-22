@@ -71,7 +71,6 @@ public class MiniGameScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage);
 
-        // Create white font for all labels
         whiteFont = new BitmapFont();
 
         buildUI();
@@ -94,7 +93,6 @@ public class MiniGameScreen implements Screen {
             new TextureRegionDrawable(new TextureRegion(backgroundTexture))
         );
 
-        // Create white label style - FORCE WHITE COLOR
         LabelStyle whiteLabelStyle = new LabelStyle();
         whiteLabelStyle.font = whiteFont;
         whiteLabelStyle.fontColor = Color.WHITE;
@@ -113,13 +111,13 @@ public class MiniGameScreen implements Screen {
     }
 
     private void createHUD() {
-        // Create white label style for HUD - FORCE WHITE COLOR
+
         LabelStyle hudStyle = new LabelStyle();
         hudStyle.font = whiteFont;
-        hudStyle.fontColor = Color.WHITE; // Explicitly set white!
+        hudStyle.fontColor = Color.WHITE;
 
         timeLabel = new Label("TIME: 20", hudStyle);
-        timeLabel.setFontScale(1.5f); // Bigger for visibility
+        timeLabel.setFontScale(1.5f);
 
         scoreLabel = new Label("SCORE: 0", hudStyle);
         scoreLabel.setFontScale(1.5f);
@@ -299,10 +297,6 @@ public class MiniGameScreen implements Screen {
 
             onFinish.accept(result);
         }
-    }
-
-    public int getScore() {
-        return score;
     }
 
     @Override

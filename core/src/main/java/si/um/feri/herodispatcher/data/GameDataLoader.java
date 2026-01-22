@@ -37,7 +37,6 @@ public class GameDataLoader {
         FileHandle file = Gdx.files.internal(CRIME_LOCATIONS_FILE);
         CrimeLocationsData data = json.fromJson(CrimeLocationsData.class, file);
 
-        // TODO: conversion needs more work, as of now it uses hardcoded map height
         float mapHeight = 4755;
         for (int i = 0; i < data.crimeLocations.size; i++) {
             data.crimeLocations.get(i).setY(mapHeight - data.crimeLocations.get(i).getY());
@@ -49,10 +48,9 @@ public class GameDataLoader {
         FileHandle file = Gdx.files.internal(PATH_GRAPH_FILE);
         PathGraphData data = json.fromJson(PathGraphData.class, file);
 
-        // TODO: change conversion
         float mapHeight = 4755f;
 
-        // --- Step 1: create nodes (no neighbors yet) ---
+        // create nodes
         ObjectMap<String, PathNode> nodeMap = new ObjectMap<>();
 
         for (PathNodeData nodeData : data.nodes) {
@@ -68,7 +66,7 @@ public class GameDataLoader {
             nodeMap.put(node.getId(), node);
         }
 
-        // --- Step 2: wire neighbors ---
+        // connect to neighbors
         for (PathNodeData nodeData : data.nodes) {
             PathNode node = nodeMap.get(nodeData.id);
 
@@ -81,8 +79,6 @@ public class GameDataLoader {
             }
         }
 
-
-        // --- Step 3: return nodes as Array ---
         return new Array<>(nodeMap.values().toArray());
     }
 

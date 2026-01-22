@@ -13,7 +13,6 @@ import si.um.feri.herodispatcher.world.static_objects.CrimeLocation;
 
 public class HeroDispatcherGame extends Game {
     public Assets assets;
-    public AssetManager manager;
 
     @Override
     public void create() {

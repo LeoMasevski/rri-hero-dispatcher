@@ -32,7 +32,6 @@ public class MenuScreen extends ScreenAdapter {
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
-        // Title with improved styling
         Table titleTable = new Table();
         titleTable.setFillParent(true);
         stage.addActor(titleTable);
@@ -41,19 +40,15 @@ public class MenuScreen extends ScreenAdapter {
         titleLabel.setFontScale(2.5f); // Bigger
         titleLabel.setColor(com.badlogic.gdx.graphics.Color.WHITE); // White color
 
-        // Add shadow effect by creating a second label behind it
         Label titleShadow = new Label("DISPATCH HEROES", game.assets.uiSkin, "title");
         titleShadow.setFontScale(2.5f);
         titleShadow.setColor(0, 0, 0, 0.7f); // Black with transparency
 
-        // Stack the labels using a container
         com.badlogic.gdx.scenes.scene2d.ui.Stack titleStack = new com.badlogic.gdx.scenes.scene2d.ui.Stack();
 
-        // Shadow layer (offset slightly)
         Table shadowTable = new Table();
         shadowTable.add(titleShadow).padLeft(4).padTop(4);
 
-        // Main title layer
         Table mainTitleTable = new Table();
         mainTitleTable.add(titleLabel);
 
@@ -62,7 +57,6 @@ public class MenuScreen extends ScreenAdapter {
 
         titleTable.add(titleStack).top().expand().padTop(50).row();
 
-        // Nav buttons
         Table navTable = new Table();
         navTable.setFillParent(true);
         navTable.padTop(300);
@@ -109,17 +103,14 @@ public class MenuScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Draw background - use screen dimensions
         batch.begin();
 
-        // Use actual screen dimensions for proper rendering
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
         float bgWidth = game.assets.menuBackground.getWidth();
         float bgHeight = game.assets.menuBackground.getHeight();
 
-        // Calculate aspect ratios
         float screenAspect = screenWidth / screenHeight;
         float bgAspect = bgWidth / bgHeight;
 
@@ -130,20 +121,17 @@ public class MenuScreen extends ScreenAdapter {
         float scaledHeight;
 
         if (screenAspect > bgAspect) {
-            // Screen is wider - scale to width
             scale = screenWidth / bgWidth;
             scaledWidth = screenWidth;
             scaledHeight = bgHeight * scale;
             y = (screenHeight - scaledHeight) / 2f;
         } else {
-            // Screen is taller - scale to height
             scale = screenHeight / bgHeight;
             scaledHeight = screenHeight;
             scaledWidth = bgWidth * scale;
             x = (screenWidth - scaledWidth) / 2f;
         }
 
-        // Set batch to use screen coordinates
         batch.getProjectionMatrix().setToOrtho2D(0, 0, screenWidth, screenHeight);
         batch.draw(game.assets.menuBackground, x, y, scaledWidth, scaledHeight);
         batch.end();

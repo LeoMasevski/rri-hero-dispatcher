@@ -9,7 +9,6 @@ public class CrimeDefinition {
     private float duration;
     private String requiredHeroAttribute;
 
-    // Required no-arg constructor for JSON libraries
     public CrimeDefinition() {
     }
 

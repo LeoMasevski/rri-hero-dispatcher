@@ -17,20 +17,14 @@ import si.um.feri.herodispatcher.assets.Assets;
 import si.um.feri.herodispatcher.data.dto.HeroData;
 import si.um.feri.herodispatcher.world.dynamic_objects.Hero;
 
-/**
- * Hero Selection Panel - overlay UI that appears on MainScreen
- * Shows hero details with carousel navigation
- * Now uses the shared UI skin for consistent styling
- */
 public class HeroSelectionPanel implements Disposable {
 
     private Stage stage;
-    private Skin skin; // Shared skin from Assets
+    private Skin skin;
     private Assets assets;
     private Array<Hero> heroes;
     private int currentHeroIndex = 0;
 
-    // UI Elements
     private Table rootTable;
     private Image heroImage;
     private Label nameLabel;
@@ -40,21 +34,19 @@ public class HeroSelectionPanel implements Disposable {
 
     private boolean isVisible = false;
 
-    // Colors for custom drawables
     private final Color BG_COLOR = new Color(0.1f, 0.1f, 0.15f, 0.92f);
     private final Color CARD_BG = new Color(1, 1, 1, 0.98f);
 
-    // Track textures for disposal
     private Array<Texture> createdTextures = new Array<>();
 
     public HeroSelectionPanel(Stage stage, Assets assets) {
         this.stage = stage;
         this.assets = assets;
-        this.skin = assets.uiSkin; // Use the shared skin!
+        this.skin = assets.uiSkin;
         this.heroes = HeroData.getAllHeroes();
 
         createUI();
-        hide(); // Start hidden
+        hide();
     }
 
     private TextureRegionDrawable createColorDrawable(Color color) {
@@ -62,27 +54,24 @@ public class HeroSelectionPanel implements Disposable {
         pixmap.setColor(color);
         pixmap.fill();
         Texture texture = new Texture(pixmap);
-        createdTextures.add(texture); // Track for disposal
+        createdTextures.add(texture);
         pixmap.dispose();
         return new TextureRegionDrawable(new TextureRegion(texture));
     }
 
     private void createUI() {
-        // Background overlay (semi-transparent dark)
         Table background = new Table();
         background.setFillParent(true);
         background.setBackground(createColorDrawable(BG_COLOR));
 
-        // Content panel (centered)
         Table panel = new Table();
         panel.setBackground(createColorDrawable(CARD_BG));
         panel.pad(25);
 
-        // Title with close button
         Table headerTable = new Table();
 
         Label titleLabel = new Label("SELECT HERO", skin);
-        titleLabel.setFontScale(2.0f); // Make title bigger
+        titleLabel.setFontScale(2.0f);
         headerTable.add(titleLabel).expandX().left().padBottom(15);
 
         TextButton closeButton = new TextButton("X", skin);
@@ -96,10 +85,8 @@ public class HeroSelectionPanel implements Disposable {
 
         panel.add(headerTable).width(700).row();
 
-        // Content area
         Table contentTable = new Table();
 
-        // Left side - Hero image
         Table leftTable = new Table();
 
         typeLabel = new Label("", skin);
@@ -112,7 +99,6 @@ public class HeroSelectionPanel implements Disposable {
         imageContainer.setBackground(createColorDrawable(Color.WHITE));
         leftTable.add(imageContainer).size(280, 280).pad(8).row();
 
-        // Hero selector with arrows
         Table selectorTable = new Table();
 
         TextButton leftArrow = new TextButton("<", skin);
@@ -147,7 +133,6 @@ public class HeroSelectionPanel implements Disposable {
 
         leftTable.add(selectorTable).width(300).padTop(10).row();
 
-        // Basic info
         Table basicInfoTable = new Table();
         basicInfoTable.setBackground(createColorDrawable(new Color(0.98f, 0.98f, 0.99f, 1)));
         basicInfoTable.pad(12);
@@ -163,10 +148,8 @@ public class HeroSelectionPanel implements Disposable {
 
         contentTable.add(leftTable).top().left().padRight(20);
 
-        // Right side - Stats and info
         Table rightTable = new Table();
 
-        // Stats
         Table statsCard = new Table();
         statsCard.setBackground(createColorDrawable(new Color(0.98f, 0.98f, 0.99f, 1)));
         statsCard.pad(15);
@@ -201,7 +184,6 @@ public class HeroSelectionPanel implements Disposable {
 
         rightTable.add(statsCard).width(360).left().padBottom(15).row();
 
-        // Info section
         Table infoCard = new Table();
         infoCard.setBackground(createColorDrawable(new Color(0.98f, 0.98f, 0.99f, 1)));
         infoCard.pad(15);
@@ -221,7 +203,6 @@ public class HeroSelectionPanel implements Disposable {
 
         panel.add(contentTable).row();
 
-        // Select button at bottom
         TextButton selectButton = new TextButton("Select Hero", skin);
         selectButton.addListener(new ClickListener() {
             @Override
@@ -245,7 +226,6 @@ public class HeroSelectionPanel implements Disposable {
 
         Gdx.app.log("HeroPanel", "Updating display for: " + hero.getName());
 
-        // Get texture
         Texture heroTexture = getHeroTexture(currentHeroIndex);
         if (heroTexture != null) {
             Gdx.app.log("HeroPanel", "Texture loaded successfully for " + hero.getName());
@@ -254,7 +234,6 @@ public class HeroSelectionPanel implements Disposable {
             Gdx.app.log("HeroPanel", "WARNING: Texture is NULL for " + hero.getName());
         }
 
-        // Update labels
         typeLabel.setText("Type: " + hero.getType());
         nameLabel.setText(hero.getName());
         ageLabel.setText("Age: " + hero.getAge());
@@ -303,15 +282,14 @@ public class HeroSelectionPanel implements Disposable {
         return heroes.get(currentHeroIndex);
     }
 
-    // Override this method to handle hero selection
+    // override this method to handle hero selection
     protected void onHeroSelected(Hero hero) {
-        // To be overridden by MainScreen or use listener pattern
+        // to be overridden by MainScreen or use listener pattern
     }
 
     @Override
     public void dispose() {
-        // Don't dispose the shared skin - it's managed by Assets!
-        // Only dispose textures we created
+
         for (Texture tex : createdTextures) {
             tex.dispose();
         }

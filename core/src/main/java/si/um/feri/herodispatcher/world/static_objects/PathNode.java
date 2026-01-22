@@ -19,7 +19,6 @@ public class PathNode {
         this.neighbors = new Array<>();
     }
 
-    // --- Getters ---
 
     public String getId() {
         return id;
@@ -37,7 +36,6 @@ public class PathNode {
         return neighbors;
     }
 
-    // --- Graph wiring ---
 
     public void addNeighbor(PathNode neighbor) {
         if (!neighbors.contains(neighbor, true)) {

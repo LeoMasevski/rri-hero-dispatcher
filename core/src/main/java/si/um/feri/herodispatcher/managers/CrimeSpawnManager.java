@@ -20,10 +20,10 @@ public class CrimeSpawnManager {
     private final Map<String, CrimeDefinition> crimeDefinitions;
     private final Array<CrimeLocation> crimeLocations;
 
-    private final Array<Crime> activeCrimes = new Array<>(); // updates every frame and queried by UI later on
+    private final Array<Crime> activeCrimes = new Array<>();
 
     private float spawnTimer = 0f;
-    private float nextSpawnTime = 10f; // can be randomized
+    private float nextSpawnTime = 10f;
 
     private int nextCrimeId = 1;
 

@@ -100,17 +100,14 @@ public class SettingsScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Draw background - use screen dimensions
         batch.begin();
 
-        // Use actual screen dimensions for proper rendering
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
 
         float bgWidth = game.assets.menuBackground.getWidth();
         float bgHeight = game.assets.menuBackground.getHeight();
 
-        // Calculate aspect ratios
         float screenAspect = screenWidth / screenHeight;
         float bgAspect = bgWidth / bgHeight;
 
@@ -121,20 +118,17 @@ public class SettingsScreen extends ScreenAdapter {
         float scaledHeight;
 
         if (screenAspect > bgAspect) {
-            // Screen is wider - scale to width
             scale = screenWidth / bgWidth;
             scaledWidth = screenWidth;
             scaledHeight = bgHeight * scale;
             y = (screenHeight - scaledHeight) / 2f;
         } else {
-            // Screen is taller - scale to height
             scale = screenHeight / bgHeight;
             scaledHeight = screenHeight;
             scaledWidth = bgWidth * scale;
             x = (screenWidth - scaledWidth) / 2f;
         }
 
-        // Set batch to use screen coordinates
         batch.getProjectionMatrix().setToOrtho2D(0, 0, screenWidth, screenHeight);
         batch.draw(game.assets.menuBackground, x, y, scaledWidth, scaledHeight);
         batch.end();

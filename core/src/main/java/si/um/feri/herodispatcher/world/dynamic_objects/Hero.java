@@ -9,30 +9,25 @@ public class Hero {
     private Crime assignedCrime;
     private boolean arrivedAtCrime = false;
 
-    // ---------- Identity / Info ----------
     private final String name;
     private final String type;
     private final int age;
     private final String weapon;
     private final String infoFacts;
-    private final String heroId; // used for asset lookup (e.g. "spiderman")
+    private final String heroId;
 
-    // ---------- Stats (0-5) ----------
     private final int strength;
     private final int intelligence;
     private final int agility;
 
-    // ---------- Movement / Pathfinding ----------
-    private final Vector2 position;               // hero's current world position
-    private final float speed = 200f;             // pixels per second
+    private final Vector2 position;
+    private final float speed = 200f;
 
     private Array<PathNode> currentPath = new Array<>();
     private int currentPathIndex = 0;
 
-    // If the target isn't exactly on a node (crime circle), we finish with a final move here
     private Vector2 finalTarget = null;
 
-    // ---------- Constructors ----------
     public Hero(String name, String type, int age, String weapon, String infoFacts,
                 int strength, int intelligence, int agility, String heroId) {
         this(name, type, age, weapon, infoFacts, strength, intelligence, agility, heroId, 0f, 0f);
@@ -55,8 +50,6 @@ public class Hero {
         this.position = new Vector2(startX, startY);
     }
 
-    // ---------- Update ----------
-    /** Call every frame to move the hero along the path / to the final target. */
     public void update(float delta) {
 
         // 1) Follow graph nodes
@@ -71,13 +64,11 @@ public class Hero {
             return;
         }
 
-        // 2) PATH JE KONČAN → HERO JE PRI CRIME
         if (assignedCrime != null && assignedCrime.isActive()) {
             arrivedAtCrime = true;
             return;
         }
 
-        // 3) Optional finalTarget (če ga boš kdaj rabil)
         if (finalTarget != null) {
             moveTowards(finalTarget, delta);
 
@@ -88,15 +79,10 @@ public class Hero {
         }
     }
 
-    // ---------- Path API ----------
     public void setPath(Array<PathNode> path) {
         setPath(path, null);
     }
 
-    /**
-     * @param path       Node path to follow (can be empty).
-     * @param finalTarget Optional exact destination after the last node (e.g. crime circle).
-     */
     public void setPath(Array<PathNode> path, Vector2 finalTarget) {
         this.currentPath = (path == null) ? new Array<>() : path;
         this.currentPathIndex = 0;
@@ -131,7 +117,6 @@ public class Hero {
         return finalTarget;
     }
 
-    // ---------- Movement helpers ----------
     private void moveTowards(Vector2 target, float delta) {
         if (target == null) return;
 
@@ -140,13 +125,11 @@ public class Hero {
 
         float maxMove = speed * delta;
 
-        // Don't overshoot
         if (maxMove >= dist) {
             position.set(target);
             return;
         }
 
-        // Move in direction of target
         float dx = target.x - position.x;
         float dy = target.y - position.y;
         float invLen = 1f / (float) Math.sqrt(dx * dx + dy * dy);
@@ -155,7 +138,6 @@ public class Hero {
         position.y += dy * invLen * maxMove;
     }
 
-    // ---------- Getters ----------
     public String getName() { return name; }
     public String getType() { return type; }
     public int getAge() { return age; }
@@ -186,7 +168,6 @@ public class Hero {
         return assignedCrime;
     }
 
-    // ---------- Setters ----------
     public void assignCrime(Crime crime) {
         this.assignedCrime = crime;
     }

@@ -1,7 +1,6 @@
 package si.um.feri.herodispatcher.world.static_objects;
 
 import com.badlogic.gdx.math.Vector2;
-import si.um.feri.herodispatcher.world.static_objects.PathNodeType;
 
 import java.util.Map;
 
@@ -21,10 +20,6 @@ public class PathGraph {
         return nodesById;
     }
 
-    /**
-     * Finds the closest node to a world position.
-     * Used to snap heroes / crimes onto the graph.
-     */
     public PathNode findClosestNode(Vector2 position) {
         PathNode closest = null;
         float bestDistSq = Float.MAX_VALUE;
@@ -56,7 +51,6 @@ public class PathGraph {
 
         if (closestPreferred != null) return closestPreferred;
 
-        // fallback: closest of any type
         return findClosestNode(position);
     }
 

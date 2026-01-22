@@ -9,14 +9,11 @@ public class CrimeLocation {
     private String name;
     private String description;
 
-    // Map/world coordinates
     private float x;
     private float y;
 
-    // crimeTypes are CrimeDefinition IDs
     private Array<String> crimeTypes;
 
-    // Required no-arg constructor for JSON libraries
     public CrimeLocation() {
     }
 

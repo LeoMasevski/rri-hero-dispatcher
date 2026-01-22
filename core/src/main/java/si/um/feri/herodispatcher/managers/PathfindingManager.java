@@ -12,7 +12,7 @@ public class PathfindingManager {
     private final PathFinder pathFinder;
 
     // how close the click target must be to a LOCATION node to prefer it
-    private static final float LOCATION_SNAP_RADIUS = 120f;
+    private static final float LOCATION_PREF_RADIUS = 120f;
 
     public PathfindingManager(PathGraph graph) {
         this.graph = graph;
@@ -26,11 +26,9 @@ public class PathfindingManager {
     public Array<PathNode> requestPath(Vector2 startPos, Vector2 targetPos) {
         if (startPos == null || targetPos == null) return new Array<>();
 
-        // Start can be any node (closest road node is fine)
         PathNode startNode = graph.findClosestNode(startPos);
 
-        // Target: prefer LOCATION node near the crime (your end nodes)
-        PathNode targetNode = graph.findClosestNode(targetPos, PathNodeType.LOCATION, LOCATION_SNAP_RADIUS);
+        PathNode targetNode = graph.findClosestNode(targetPos, PathNodeType.LOCATION, LOCATION_PREF_RADIUS);
 
         if (startNode == null || targetNode == null) return new Array<>();
 
